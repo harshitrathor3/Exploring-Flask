@@ -1,0 +1,6 @@
+created different branches for different topics.
+branch name will be like - YT_CHANNEL_NAME-VID_NO-TOPIC_OF_CONTENT
+branch name will be - SOURCE-TOPIC_NAME (if not learned from youtube)
+
+YT Chhanel flask playlist - abbreviation
+Corey Schafer - CS
