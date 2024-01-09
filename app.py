@@ -1,42 +1,57 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, flash, redirect
 from markupsafe import escape
+from forms import RegistrationForm, LoginForm
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '35e03a9a569c608d93ff735fb6f5cdb3'
 
-dummy_data = [
+posts = [
     {
-        "title": "Exploring the Universe",
-        "author": "Astronomy Enthusiast",
-        "date_posted": "2023-01-15",
-        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        'author': 'Corey Schafer',
+        'title': 'Blog Post 1',
+        'content': 'First post content',
+        'date_posted': 'April 20, 2018'
     },
     {
-        "title": "Cooking Adventures",
-        "author": "Chef Gourmet",
-        "date_posted": "2023-02-28",
-        "content": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        'author': 'Jane Doe',
+        'title': 'Blog Post 2',
+        'content': 'Second post content',
+        'date_posted': 'April 21, 2018'
     }
 ]
 
 
-@app.route('/')
-@app.route('/home')
+@app.route("/")
+@app.route("/home")
 def home():
-    return '<h2>Hello</h2>'
+    return render_template('home.html', posts=posts)
 
 
-@app.route('/<var>/<var1>')
-def fun(var, var1):
-    print(var, var1 , sep='\n')
-    return f'Hello {escape(var), escape(var1)}'
+@app.route("/about")
+def about():
+    return render_template('about.html', title='About')
 
-@app.route('/posts')
-def showPosts():
-    return render_template('sample.html', posts = dummy_data, title = 'something cool one')
 
-@app.route('/about')
-def another():
-    return render_template('another.html', title = 'the title is here')
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        flash(f'Account created for {form.username.data}!', 'success')
+        return redirect(url_for('home'))
+    return render_template('register.html', title='Register', form=form)
+
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == 'admin@blog.com' and form.password.data == 'password':
+            flash('You have been logged in!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Login Unsuccessful. Please check username and password', 'danger')
+    return render_template('login.html', title='Login', form=form)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
