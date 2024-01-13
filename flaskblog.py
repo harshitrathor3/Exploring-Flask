@@ -5,7 +5,7 @@ from forms import RegistrationForm, LoginForm
 from datetime import datetime
 
 app = Flask(__name__)
-app.app_context().push()
+# app.app_context().push()
 app.config['SECRET_KEY'] = '35e03a9a569c608d93ff735fb6f5cdb3'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
